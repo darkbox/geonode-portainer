@@ -33,7 +33,8 @@ services:
     environment:
       - IS_CELERY=False
     entrypoint: ["/usr/src/geonode/entrypoint.sh"]
-    command: "uwsgi --ini /usr/src/geonode/uwsgi.ini"
+    #command: "uwsgi --ini /usr/src/geonode/uwsgi.ini"
+    command: "python3 manage.py runserver 0.0.0.0:8000"
 
   # Celery worker that executes celery tasks created by Django.
   celery:
