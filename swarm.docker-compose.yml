@@ -1,0 +1,97 @@
+x-common-django:
+  &default-common-django
+  image: geonode/geonode:latest-ubuntu-22.04
+  restart: unless-stopped
+  env_file:
+    - .env
+  volumes:
+    - statics:/mnt/volumes/statics
+    - geoserver-data-dir:/geoserver_data/data
+    - backup-restore:/backup_restore
+    - data:/data
+    - tmp:/tmp
+  networks:
+    - geonode_network
+  deploy:
+    replicas: 1
+    restart_policy:
+      condition: on-failure
+
+services:
+  db:
+    image: geonode/postgis:15.3-latest
+    command: postgres -c "max_connections=${POSTGRESQL_MAX_CONNECTIONS}"
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+    networks:
+      - geonode_network
+    deploy:
+      placement:
+        constraints:
+          - node.role == manager
+      replicas: 1
+    healthcheck:
+      test: ["CMD", "pg_isready -U postgres"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+
+  geoserver:
+    image: geonode/geoserver:2.24.3-latest
+    networks:
+      - geonode_network
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/geoserver/web"]
+      interval: 15s
+      retries: 5
+      start_period: 40s
+
+  django:
+    << : *default-common-django
+    networks:
+      - geonode_network
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000"]
+      interval: 15s
+      retries: 5
+      start_period: 40s
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    networks:
+      - geonode_network
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+    command: ["nginx", "-g", "daemon off;"]
+
+networks:
+  geonode_network:
+    driver: overlay
+
+volumes:
+  dbdata:
+    driver: local
+  statics:
+    driver: local
+  geoserver-data-dir:
+    driver: local
+  backup-restore:
+    driver: local
+  data:
+    driver: local
+  tmp:
+    driver: local
