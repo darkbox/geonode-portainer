@@ -96,7 +96,7 @@ services:
     env_file:
       - .env
     ports:
-      - "8080:8080"
+      - "${GEOSERVER_LB_PORT:-8088}:8080"
     volumes:
       - statics:/mnt/volumes/statics
       - geoserver-data-dir:/geoserver_data/data
