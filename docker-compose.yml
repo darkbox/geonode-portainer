@@ -82,7 +82,7 @@ services:
   letsencrypt:
     image: geonode/letsencrypt:2.6.0-latest
     env_file:
-      - .env
+      - stack.env
     volumes:
       - nginx-certificates:/geonode-certificates
     deploy:
