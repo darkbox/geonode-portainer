@@ -37,7 +37,7 @@ services:
     entrypoint: ["/usr/src/geonode/entrypoint.sh"]
     command: "celery-cmd"
     deploy:
-      replicas: 2
+      replicas: 1
     networks:
       - geonode-network
 
