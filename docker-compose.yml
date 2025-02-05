@@ -12,7 +12,7 @@ x-common-django:
     - data:/data
     - tmp:/tmp
   healthcheck:
-    test: ["CMD", "curl", "-m", "10", "--fail", "--silent", "--write-out", "HTTP CODE : %{http_code}\n", "--output", "/dev/null", "http://localhost:8000/"]
+    test: ["CMD", "curl", "-m", "10", "--fail", "--silent", "--write-out", "HTTP CODE : %{http_code}\n", "--output", "/dev/null", "http://localhost:3080/"]
     interval: 30s
     timeout: 10s
     retries: 3
