@@ -11,6 +11,9 @@ x-common-django:
     - backup-restore:/backup_restore
     - data:/data
     - tmp:/tmp
+  depends_on:
+    db:
+      condition: service_healthy
   deploy:
     replicas: 1
     restart_policy:
@@ -98,6 +101,11 @@ services:
       - backup-restore:/backup_restore
       - data:/data
       - tmp:/tmp
+    depends_on:
+      data-dir-conf:
+        condition: service_healthy
+      django:
+        condition: service_healthy
     healthcheck:
       test: ["CMD", "curl", "-m", "10", "--fail", "--silent", "--write-out", "HTTP CODE : %{http_code}\n", "--output", "/dev/null", "http://localhost:8080/geoserver/ows"]
       interval: 60s
@@ -113,6 +121,8 @@ services:
     entrypoint: sleep infinity
     volumes:
       - geoserver-data-dir:/geoserver_data/data
+    healthcheck:
+      test: "ls -A '/geoserver_data/data' | wc -l"
     deploy:
       replicas: 1
     networks:
