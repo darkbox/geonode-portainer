@@ -13,7 +13,7 @@ x-common-django:
     - tmp:/tmp
   depends_on:
     - db:
-    	condition: service_healthy
+      condition: service_healthy
   deploy:
     replicas: 1
     restart_policy:
