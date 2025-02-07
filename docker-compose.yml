@@ -29,7 +29,8 @@ services:
       - IS_CELERY=False
     entrypoint: ["/usr/src/geonode/entrypoint.sh"]
     command: "uwsgi --ini /usr/src/geonode/uwsgi.ini"
-    #command: "python manage.py runserver 0.0.0.0:8000"  # Avoid uWSGI for now
+    #command: "uwsgi --ini /usr/src/geonode/uwsgi.ini --die-on-term --need-app"
+    #command: "python3 manage.py runserver 0.0.0.0:8000"  # Avoid uWSGI for now
     networks:
       - geonode-network
 
