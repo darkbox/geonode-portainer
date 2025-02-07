@@ -12,8 +12,7 @@ x-common-django:
     - data:/data
     - tmp:/tmp
   depends_on:
-    - db:
-      condition: service_healthy
+    - db
   deploy:
     replicas: 1
     restart_policy:
@@ -67,8 +66,8 @@ services:
     environment:
       - RESOLVER=127.0.0.11
     ports:
-      - "${HTTP_PORT-3080}:80"
-      - "${HTTPS_PORT}:443"
+      - ${HTTP_PORT-3080}:80
+      - ${HTTPS_PORT-3443}:443
     volumes:
       - nginx-confd:/etc/nginx
       - nginx-certificates:/geonode-certificates
@@ -102,10 +101,8 @@ services:
       - data:/data
       - tmp:/tmp
     depends_on:
-      - data-dir-conf:
-	  condition: service_healthy
-      - django:
-          condition: service_healthy
+      - data-dir-conf
+      - django
     healthcheck:
       test: ["CMD", "curl", "-m", "10", "--fail", "--silent", "--write-out", "HTTP CODE : %{http_code}\n", "--output", "/dev/null", "http://localhost:8080/geoserver/ows"]
       interval: 60s
