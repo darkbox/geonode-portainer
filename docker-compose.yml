@@ -30,6 +30,12 @@ services:
     entrypoint: ["/usr/src/geonode/entrypoint.sh"]
     command: "uwsgi --ini /usr/src/geonode/uwsgi.ini"
     #command: "python manage.py runserver 0.0.0.0:8000"  # Avoid uWSGI for now
+    healthcheck:
+      test: "curl -m 10 --fail --silent --write-out 'HTTP CODE : %{http_code}\n' --output /dev/null http://django:8001/"
+      start_period: 60s
+      interval: 60s
+      timeout: 10s
+      retries: 2
     networks:
       - geonode-network
 
