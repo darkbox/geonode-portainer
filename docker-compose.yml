@@ -27,7 +27,9 @@ services:
     environment:
       - IS_CELERY=False
     entrypoint: ["/usr/src/geonode/entrypoint.sh"]
-    command: "sleep infinity & uwsgi --ini /usr/src/geonode/uwsgi.ini"
+    #command: "uwsgi --ini /usr/src/geonode/uwsgi.ini"
+    command: >
+    	sh -c (sleep infinity) & exec uwsgi --ini /usr/src/geonode/uwsgi.ini
     #command: "python3 manage.py runserver 0.0.0.0:8000"  # Avoid uWSGI for now
     healthcheck:
       test: ["CMD", "curl", "-f", "-s", "http://localhost:8000/"]
