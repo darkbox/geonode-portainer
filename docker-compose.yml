@@ -16,8 +16,6 @@ x-common-django:
     - geonode
   deploy:
     replicas: 1
-    restart_policy:
-      condition: "no"
     placement:
       constraints:
         - node.role == worker
