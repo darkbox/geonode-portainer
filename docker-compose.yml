@@ -26,9 +26,7 @@ services:
     #command: "uwsgi --ini /usr/src/geonode/uwsgi.ini"
     #command: "uwsgi --ini /usr/src/geonode/uwsgi.ini --catch-exceptions --strict --logto /dev/stdout"
     command: "python3 manage.py runserver 0.0.0.0:8010"
-    #command: ["/bin/bash", "-c", "python3 manage.py runserver 0.0.0.0:8010 & sleep 30 && uwsgi --ini /usr/src/geonode/uwsgi.ini"]
     healthcheck:
-      #test: ["CMD", "true"]  # Always returns success
       test: ["CMD", "curl", "-f", "-s", "http://localhost:8010/"]
       interval: 30s
       timeout: 30s
