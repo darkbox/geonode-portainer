@@ -15,6 +15,9 @@ x-common-django:
     - db
   deploy:
     replicas: 1
+    placement:
+        constraints:
+          - node.role == manager
 
 services:
 
@@ -24,7 +27,6 @@ services:
       - IS_CELERY=False
     entrypoint: ["/usr/src/geonode/entrypoint.sh"]
     #command: "uwsgi --ini /usr/src/geonode/uwsgi.ini"
-    #command: "uwsgi --ini /usr/src/geonode/uwsgi.ini --catch-exceptions --strict --logto /dev/stdout"
     command: "python3 manage.py runserver 0.0.0.0:8010"
     healthcheck:
       test: ["CMD", "curl", "-f", "-s", "http://localhost:8010/"]
@@ -41,8 +43,6 @@ services:
       - IS_CELERY=True
     entrypoint: ["/usr/src/geonode/entrypoint.sh"]
     command: "celery-cmd"
-    deploy:
-      replicas: 1
     networks:
       - geonode-network
 
@@ -58,6 +58,9 @@ services:
       retries: 5
     deploy:
       replicas: 1
+      placement:
+        constraints:
+          - node.role == manager
     networks:
       - geonode-network
 
@@ -76,6 +79,9 @@ services:
       - statics:/mnt/volumes/statics
     deploy:
       replicas: 1
+      placement:
+        constraints:
+          - node.role == manager
     networks:
       - geonode-network
 
@@ -87,6 +93,9 @@ services:
       - nginx-certificates:/geonode-certificates
     deploy:
       replicas: 1
+      placement:
+        constraints:
+          - node.role == manager
     networks:
       - geonode-network
 
@@ -112,6 +121,9 @@ services:
       retries: 2
     deploy:
       replicas: 1
+      placement:
+        constraints:
+          - node.role == manager
     networks:
       - geonode-network
 
