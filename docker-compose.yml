@@ -15,6 +15,9 @@ x-common-django:
     - db
   deploy:
     replicas: 1
+    placement:
+        constraints:
+          - node.role == manager
 
 services:
 
@@ -41,8 +44,6 @@ services:
       - IS_CELERY=True
     entrypoint: ["/usr/src/geonode/entrypoint.sh"]
     command: "celery-cmd"
-    deploy:
-      replicas: 1
     networks:
       - geonode-network
 
@@ -76,6 +77,9 @@ services:
       - statics:/mnt/volumes/statics
     deploy:
       replicas: 1
+      placement:
+        constraints:
+          - node.role == manager
     networks:
       - geonode-network
 
