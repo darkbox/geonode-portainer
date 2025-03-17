@@ -30,7 +30,8 @@ services:
     healthcheck:
       #test: ["CMD", "true"]  # Always returns success
       #test: ["CMD", "curl", "-f", "-s", "http://localhost:8010/"]
-      test: "curl -m 10 --fail --silent --write-out 'HTTP CODE : %{http_code}\n' --output /dev/null http://django:8000/"
+      test: ["CMD", "curl", "-f", "-s", "http://localhost:8000/"]
+      #test: "curl -m 10 --fail --silent --write-out 'HTTP CODE : %{http_code}\n' --output /dev/null http://django:8000/"
       interval: 30s
       timeout: 30s
       retries: 5
